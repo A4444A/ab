@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#141b15">
+  <!-- Shows in the browser tab only. Replace with your artist name. -->
+  <title>Music</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <!-- Background: two lit copies of the same terrain noise (your octave1 base),
+       drawn as sage and cream contour lines on moss. -->
+  <div class="island" aria-hidden="true"></div>
+  <div class="islandt" aria-hidden="true"></div>
+
+  <!-- script.js builds the plants into this element -->
+  <div id="plants" aria-hidden="true"></div>
+
+  <main>
+    <!-- Spotify: album embed. theme=0 is the dark player. -->
+    <div class="frame">
+      <iframe
+        title="Collection of Soundwaves on Spotify"
+        src="https://open.spotify.com/embed/album/3HBJVXJK4a3cbYkRq32iym?utm_source=generator&amp;theme=0"
+        width="100%" height="352" frameborder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="eager"></iframe>
+    </div>
+
+    <!-- Apple Music: album embed -->
+    <div class="frame">
+      <iframe
+        title="Collection of Soundwaves on Apple Music"
+        src="https://embed.music.apple.com/us/album/collection-of-soundwaves/6780994997?theme=dark"
+        width="100%" height="450" frameborder="0"
+        allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+        sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+        loading="lazy"></iframe>
+    </div>
+
+    <!-- Instagram: direct iframe (no embed.js script needed).
+         The height is a guess; adjust --ig-height in style.css after you see it. -->
+    <div class="frame frame-ig">
+      <iframe
+        title="Instagram post"
+        src="https://www.instagram.com/p/DZ3Pql5kY-a/embed/"
+        width="100%" height="600" frameborder="0" scrolling="no"
+        allowtransparency="true"
+        loading="lazy"></iframe>
+    </div>
+
+    <!-- Events from your Google Sheet. Stays hidden unless events load. -->
+    <section id="events" class="events" aria-label="Upcoming events" hidden>
+      <ul id="event-list"></ul>
+    </section>
+  </main>
+
+  <!-- SVG filters. Keep this element at 0x0 (not display:none) or the filters stop working. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+
+    <!-- Layer 1: lit from azimuth 90, drawn in sage -->
+    <filter id="octave1" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0005" numOctaves="11" seed="6" result="o1"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.0001" numOctaves="8" seed="4" result="o3"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.0018" numOctaves="8" seed="4" result="o4"/>
+      <feMerge result="m1">
+        <feMergeNode in="o1"/><feMergeNode in="o3"/><feMergeNode in="o1"/><feMergeNode in="o3"/>
+      </feMerge>
+      <feGaussianBlur in="m1" stdDeviation="5" result="n1"/>
+
+      <feTurbulence type="fractalNoise" baseFrequency="0.0016" numOctaves="8" seed="4" result="p2"/>
+      <feMerge result="m2">
+        <feMergeNode in="p2"/><feMergeNode in="o4"/><feMergeNode in="n1"/>
+      </feMerge>
+      <feGaussianBlur in="m2" stdDeviation="5" result="n2"/>
+
+      <feMerge result="m3">
+        <feMergeNode in="p2"/><feMergeNode in="p2"/><feMergeNode in="n2"/>
+      </feMerge>
+      <feGaussianBlur in="m3" stdDeviation="5" result="n3"/>
+
+      <!-- elevation="0" is what your empty elevation="" fell back to. Only slopes facing the light catch it. -->
+      <feDiffuseLighting in="n3" surfaceScale="12" diffuseConstant="1" lighting-color="#ffffff" result="lit">
+        <feDistantLight azimuth="90" elevation="0"/>
+      </feDiffuseLighting>
+
+      <!-- Replaces CSS brightness(20): brightness becomes opacity, colour becomes a fixed sage.
+           Dark areas turn transparent instead of darkening the page.
+           Colour = last number in each of the first three rows (0-1). Opacity gain = the 20s (as 6.67 x3). -->
+      <feColorMatrix in="lit" type="matrix"
+        values="0 0 0 0 0.612
+                0 0 0 0 0.686
+                0 0 0 0 0.533
+                6.67 6.67 6.67 0 0"/>
+    </filter>
+
+    <!-- Layer 2: same noise, lit from the opposite side, drawn in cream -->
+    <filter id="octave2" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0005" numOctaves="11" seed="6" result="o1"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.0001" numOctaves="8" seed="4" result="o3"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.0018" numOctaves="8" seed="4" result="o4"/>
+      <feMerge result="m1">
+        <feMergeNode in="o1"/><feMergeNode in="o3"/><feMergeNode in="o1"/><feMergeNode in="o3"/>
+      </feMerge>
+      <feGaussianBlur in="m1" stdDeviation="5" result="n1"/>
+
+      <feTurbulence type="fractalNoise" baseFrequency="0.0016" numOctaves="8" seed="4" result="p2"/>
+      <feMerge result="m2">
+        <feMergeNode in="p2"/><feMergeNode in="o4"/><feMergeNode in="n1"/>
+      </feMerge>
+      <feGaussianBlur in="m2" stdDeviation="5" result="n2"/>
+
+      <feMerge result="m3">
+        <feMergeNode in="p2"/><feMergeNode in="p2"/><feMergeNode in="n2"/>
+      </feMerge>
+      <feGaussianBlur in="m3" stdDeviation="5" result="n3"/>
+
+      <feDiffuseLighting in="n3" surfaceScale="12" diffuseConstant="1" lighting-color="#ffffff" result="lit">
+        <feDistantLight azimuth="-90" elevation="0"/>
+      </feDiffuseLighting>
+
+      <feColorMatrix in="lit" type="matrix"
+        values="0 0 0 0 0.910
+                0 0 0 0 0.871
+                0 0 0 0 0.769
+                6.67 6.67 6.67 0 0"/>
+    </filter>
+  </svg>
+
+</body>
+</html>

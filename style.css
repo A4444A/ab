@@ -1,0 +1,202 @@
+/* ------------------------------------------------------------
+   Palette. Change a colour here and it changes everywhere.
+   (The two line colours in the SVG filters in index.html are
+   separate: they live inside the feColorMatrix values.)
+------------------------------------------------------------ */
+:root {
+  --moss-950: #141b15;
+  --moss-900: #1b261c;
+  --moss-800: #243324;
+  --moss-700: #2f4030;
+  --sage: #9caf88;
+  --sage-light: #c3cfb0;
+  --cream: #eee5cf;
+  --clay: #b9785b;
+
+  --column: 440px;          /* width of the embed column on larger screens */
+  --ig-height: 600px;       /* Instagram iframe height: adjust after you see it */
+  --s: clamp(96px, 26vw, 190px); /* plant size */
+
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--moss-950); }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--cream);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+[hidden] { display: none !important; }
+
+/* ------------------------------------------------------------
+   Background: moss gradient + two contour-line layers.
+   Fixed so the texture is drawn once and the page scrolls over it.
+   100lvh (the "large" viewport height) keeps the size constant when
+   a phone's toolbars slide away, so the filter isn't re-run on scroll.
+------------------------------------------------------------ */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; right: 0; left: 0;
+  height: 100vh;
+  height: 100lvh;
+  z-index: -3;
+  background:
+    radial-gradient(120% 80% at 50% 28%, var(--moss-800) 0%, var(--moss-900) 55%, var(--moss-950) 100%);
+}
+
+.island,
+.islandt {
+  position: fixed;
+  top: 0; right: 0; left: 0;
+  height: 100vh;
+  height: 100lvh;
+  z-index: -2;
+  pointer-events: none;
+  background: #000;      /* the filter ignores this colour; the element just needs a box */
+}
+
+.island  { opacity: 0.55; filter: url(#octave1); }
+.islandt { opacity: 0.45; filter: url(#octave2); }
+
+/* ------------------------------------------------------------
+   Plants. Each .slot is positioned and mirrored or rotated once
+   (static). The inner .plant is the only thing that animates, and
+   it animates transform alone, which the browser can do on the GPU.
+------------------------------------------------------------ */
+#plants { position: static; }
+
+.slot {
+  position: fixed;
+  z-index: -1;
+  width: var(--s);
+  height: calc(var(--s) * 1.5);
+  pointer-events: none;
+}
+
+.slot .plant,
+.slot svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.slot .plant {
+  transform-origin: 50% 100%;       /* sway pivots at the base of the plant */
+  animation: sway var(--dur, 12s) ease-in-out var(--delay, 0s) infinite alternate;
+  will-change: transform;
+}
+
+@keyframes sway {
+  from { transform: rotate(-1.4deg); }
+  to   { transform: rotate(1.4deg); }
+}
+
+/* Corners: the base of each plant sits in the corner. */
+.slot-tl { top: 0;    left: 0;  transform: rotate(180deg) scaleX(-1); }
+.slot-tr { top: 0;    right: 0; transform: rotate(180deg); }
+.slot-bl { bottom: 0; left: 0; }
+.slot-br { bottom: 0; right: 0; transform: scaleX(-1); }
+
+/* Edges: rotated a quarter turn so the base sits on the screen edge.
+   The 0.25 offset is (height - width) / 2, which is what puts the rotated base at the edge. */
+.slot-el { top: calc(46% - var(--s) * 0.75); left:  calc(var(--s) * 0.25); transform: rotate(90deg); }
+.slot-er { top: calc(60% - var(--s) * 0.75); right: calc(var(--s) * 0.25); transform: rotate(-90deg); }
+
+/* Motion off for anyone whose device asks for it */
+@media (prefers-reduced-motion: reduce) {
+  .slot .plant { animation: none; will-change: auto; }
+}
+
+/* ------------------------------------------------------------
+   Content column
+------------------------------------------------------------ */
+main {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 28px, var(--column));
+  margin: 0 auto;
+  /* Space at the top and bottom keeps the corner plants clear of the embeds */
+  padding: clamp(110px, 20vh, 170px) 0 clamp(120px, 22vh, 180px);
+  display: grid;
+  gap: 22px;
+}
+
+.frame {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(238, 229, 207, 0.16);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38);
+  background: var(--moss-900);
+}
+
+.frame iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+}
+
+.frame-ig iframe { height: var(--ig-height); }
+
+/* ------------------------------------------------------------
+   Events (only visible once the sheet loads with upcoming rows)
+------------------------------------------------------------ */
+.events {
+  border-radius: 14px;
+  border: 1px solid rgba(195, 207, 176, 0.2);
+  background: rgba(20, 27, 21, 0.78);
+  padding: 4px 18px;
+}
+
+.events ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.event {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  column-gap: 14px;
+  row-gap: 2px;
+  align-items: baseline;
+  padding: 15px 0;
+  color: var(--cream);
+  text-decoration: none;
+  line-height: 1.35;
+}
+
+.events li + li .event { border-top: 1px solid rgba(195, 207, 176, 0.18); }
+
+.event-date {
+  color: var(--sage-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.event-title { font-size: 1.08rem; }
+
+.event-place {
+  grid-column: 2;
+  color: var(--sage);
+  font-size: 0.92rem;
+}
+
+a.event:hover .event-title { color: var(--sage-light); }
+
+a.event:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Wider screens: more room for plants, slightly larger column */
+@media (min-width: 900px) {
+  :root { --s: clamp(150px, 15vw, 250px); }
+}
