@@ -141,11 +141,7 @@ a.event:focus-visible {
     border-radius: 10px;
   }
 
-  .frame:first-child iframe {
-    height: 300px;
-  }
-
-  .frame:nth-child(2) iframe {
+.apple-frame iframe {
     height: 380px;
-  }
+}
 }
