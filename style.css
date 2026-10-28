@@ -53,7 +53,7 @@ body {
 main {
   position: relative;
   z-index: 1;
-  width: min(calc(100% - 24px), 520px);
+  width: min(calc(100% - 24px), 650px);
   margin: 0 auto;
   padding:
     max(24px, env(safe-area-inset-top))
