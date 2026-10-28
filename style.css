@@ -64,13 +64,23 @@ main {
 }
 
 .frame {
-  border-radius: 12px;
-  overflow: hidden;
-  background: #181818;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
-
   opacity: 0;
-  animation: fadeIn 3s ease forwards;
+  filter: blur(10px);
+
+  animation: materialize 5s ease forwards;
+  animation-delay: 2s;
+}
+
+@keyframes materialize {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0px);
+  }
 }
 
 
