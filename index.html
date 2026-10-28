@@ -47,17 +47,17 @@
   <!-- SVG filters. Keep this element at 0x0 (not display:none) or the filters stop working. -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
 
-    <filter id="octave1" x="-5%" y="-5%" width="110%" height="110%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.0005" numOctaves="11" seed="6" result="o1"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.0001" numOctaves="8" seed="4" result="o3"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.0018" numOctaves="8" seed="4" result="o4"/>
+    <filter id="octave1" x="-3%" y="-3%" width="115%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.007" numOctaves="11" seed="6" result="o1"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="9" seed="4" result="o3"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="10" seed="7" result="o4"/>
 
       <feMerge result="finalIsland">
         <feMergeNode in="o1"/><feMergeNode in="o3"/><feMergeNode in="o1"/><feMergeNode in="o3"/>
       </feMerge>
       <feGaussianBlur in="finalIsland" stdDeviation="5" result="noiseo"/>
 
-      <feTurbulence type="fractalNoise" baseFrequency="0.0016" numOctaves="8" seed="4" result="o2"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.0096" numOctaves="14" seed="7" result="o2"/>
       <feMerge result="noiseo">
         <feMergeNode in="o2"/><feMergeNode in="o4"/><feMergeNode in="noiseo"/>
       </feMerge>
@@ -69,7 +69,7 @@
       <feGaussianBlur in="noiseo" stdDeviation="5" result="noiseo"/>
 
       <!-- elevation="0" is what your empty elevation="" fell back to -->
-      <feDiffuseLighting in="noiseo" surfaceScale="12" diffuseConstant="1" lighting-color="#d7bb98" result="lit">
+      <feDiffuseLighting in="noiseo" surfaceScale="16" diffuseConstant="4" lighting-color="#d7bb98" result="lit">
         <feDistantLight azimuth="90" elevation="0"/>
       </feDiffuseLighting>
 
