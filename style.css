@@ -24,6 +24,84 @@ body {
   overflow-x: hidden;
   background: transparent;
 }
+#intro-container {
+  position: relative;
+  z-index: 2;
+
+  width: min(calc(100% - 24px), 900px);
+
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+  filter: blur(10px);
+
+  animation: materialize 5s ease forwards;
+  animation-delay: 3s;
+}
+#intro-video {
+  width: 100%;
+  display: block;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 10px 28px rgba(0,0,0,0.4);
+}
+#begin-transmission {
+  position: absolute;
+
+  color: rgba(255,255,255,0);
+
+  font-size: 1rem;
+
+  letter-spacing: 0.12em;
+
+  cursor: pointer;
+
+  user-select: none;
+
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease;
+}
+#begin-transmission.visible {
+  color: rgba(255,255,255,0.9);
+}
+#begin-transmission.visible:hover {
+  color: rgba(255,255,255,1);
+
+  text-shadow:
+    0 0 8px rgba(255,255,255,0.45);
+}
+#music-content {
+  opacity: 0;
+  filter: blur(10px);
+
+  pointer-events: none;
+}
+#music-content.visible {
+  opacity: 1;
+  filter: blur(0);
+
+  pointer-events: auto;
+
+  transition:
+    opacity 5s ease,
+    filter 5s ease;
+}
+#intro-container.fade-out {
+  opacity: 0;
+
+  filter: blur(20px);
+
+  transition:
+    opacity 5s ease,
+    filter 5s ease;
+}
 
 [hidden] {
   display: none !important;
@@ -64,11 +142,13 @@ main {
 }
 
 .frame {
-  opacity: 0;
-  filter: blur(10px);
+  border-radius: 12px;
+  overflow: hidden;
 
-  animation: materialize 5s ease forwards;
-  animation-delay: 2s;
+  background: #181818;
+
+  box-shadow:
+    0 10px 28px rgba(0,0,0,0.4);
 }
 
 @keyframes materialize {
