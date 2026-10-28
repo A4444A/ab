@@ -3,112 +3,253 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <!-- Shows in the browser tab only. Replace with your artist name. -->
   <title>Music</title>
+
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
+
 <body>
 
-  <!-- Your two terrain layers. Both now use octave1's base noise (see the filters below). -->
   <div class="island" aria-hidden="true"></div>
   <div class="islandt" aria-hidden="true"></div>
 
   <main>
 
-
-    <!-- Spotify: album embed. theme=0 is the dark player. -->
     <div class="frame">
       <iframe
         title="Collection of Soundwaves on Spotify"
-        src="https://open.spotify.com/embed/album/3HBJVXJK4a3cbYkRq32iym?utm_source=generator&amp;theme=0"
-        width="100%" height="352" frameborder="0"
+        src="https://open.spotify.com/embed/album/3HBJVXJK4a3cbYkRq32iym?utm_source=generator&theme=0"
+        width="100%"
+        height="352"
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy"></iframe>
+        loading="lazy">
+      </iframe>
     </div>
 
-    <!-- Apple Music: album embed -->
     <div class="frame">
       <iframe
         title="Collection of Soundwaves on Apple Music"
         src="https://embed.music.apple.com/us/album/collection-of-soundwaves/6780994997?theme=dark"
-        width="100%" height="450" frameborder="0"
+        width="100%"
+        height="450"
         allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
         sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-        loading="lazy"></iframe>
+        loading="lazy">
+      </iframe>
     </div>
 
-    <!-- Events from your Google Sheet. Stays hidden unless events load. -->
     <section id="events" class="events" aria-label="Upcoming events" hidden>
       <ul id="event-list"></ul>
     </section>
+
   </main>
 
-  <!-- SVG filters. Keep this element at 0x0 (not display:none) or the filters stop working. -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
 
     <filter id="octave1" x="-3%" y="-3%" width="115%" height="110%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.007" numOctaves="11" seed="6" result="o1"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="9" seed="4" result="o3"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="10" seed="7" result="o4"/>
+
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.007"
+        numOctaves="11"
+        seed="6"
+        result="o1">
+
+        <animate
+          attributeName="baseFrequency"
+          values="0.006;0.009;0.006"
+          dur="40s"
+          repeatCount="indefinite"/>
+      </feTurbulence>
+
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.009"
+        numOctaves="9"
+        seed="4"
+        result="o3">
+
+        <animate
+          attributeName="baseFrequency"
+          values="0.008;0.011;0.008"
+          dur="55s"
+          repeatCount="indefinite"/>
+      </feTurbulence>
+
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.006"
+        numOctaves="10"
+        seed="7"
+        result="o4">
+
+        <animate
+          attributeName="baseFrequency"
+          values="0.005;0.007;0.005"
+          dur="45s"
+          repeatCount="indefinite"/>
+      </feTurbulence>
 
       <feMerge result="finalIsland">
-        <feMergeNode in="o1"/><feMergeNode in="o3"/><feMergeNode in="o1"/><feMergeNode in="o3"/>
+        <feMergeNode in="o1"/>
+        <feMergeNode in="o3"/>
+        <feMergeNode in="o1"/>
+        <feMergeNode in="o3"/>
       </feMerge>
+
       <feGaussianBlur in="finalIsland" stdDeviation="5" result="noiseo"/>
 
-      <feTurbulence type="fractalNoise" baseFrequency="0.0096" numOctaves="14" seed="7" result="o2"/>
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.0096"
+        numOctaves="14"
+        seed="7"
+        result="o2">
+
+        <animate
+          attributeName="baseFrequency"
+          values="0.008;0.011;0.008"
+          dur="60s"
+          repeatCount="indefinite"/>
+      </feTurbulence>
+
       <feMerge result="noiseo">
-        <feMergeNode in="o2"/><feMergeNode in="o4"/><feMergeNode in="noiseo"/>
+        <feMergeNode in="o2"/>
+        <feMergeNode in="o4"/>
+        <feMergeNode in="noiseo"/>
       </feMerge>
+
       <feGaussianBlur in="noiseo" stdDeviation="5" result="noiseo"/>
 
       <feMerge result="noiseo">
-        <feMergeNode in="o2"/><feMergeNode in="o2"/><feMergeNode in="noiseo"/>
+        <feMergeNode in="o2"/>
+        <feMergeNode in="o2"/>
+        <feMergeNode in="noiseo"/>
       </feMerge>
+
       <feGaussianBlur in="noiseo" stdDeviation="5" result="noiseo"/>
 
-      <!-- elevation="0" is what your empty elevation="" fell back to -->
-      <feDiffuseLighting in="noiseo" surfaceScale="16" diffuseConstant="4" lighting-color="#d7bb98" result="lit">
+      <feDiffuseLighting
+        in="noiseo"
+        surfaceScale="16"
+        diffuseConstant="4"
+        lighting-color="#d7bb98"
+        result="lit">
+
         <feDistantLight azimuth="90" elevation="0"/>
+
       </feDiffuseLighting>
 
-      <feBlend in="lit" in2="SourceGraphic" mode="normal"/>
+      <feBlend
+        in="lit"
+        in2="SourceGraphic"
+        mode="normal"/>
+
     </filter>
 
-    <!-- Same terrain as octave1 (same first noise), lit from the opposite side -->
     <filter id="octave2" x="-5%" y="-5%" width="110%" height="110%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.0005" numOctaves="11" seed="6" result="o1"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.0001" numOctaves="8" seed="4" result="o3"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.0018" numOctaves="8" seed="4" result="o4"/>
+
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.0005"
+        numOctaves="11"
+        seed="6"
+        result="o1">
+
+        <animate
+          attributeName="baseFrequency"
+          values="0.0004;0.0007;0.0004"
+          dur="70s"
+          repeatCount="indefinite"/>
+      </feTurbulence>
+
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.0001"
+        numOctaves="8"
+        seed="4"
+        result="o3">
+
+        <animate
+          attributeName="baseFrequency"
+          values="0.00008;0.00014;0.00008"
+          dur="65s"
+          repeatCount="indefinite"/>
+      </feTurbulence>
+
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.0018"
+        numOctaves="8"
+        seed="4"
+        result="o4">
+
+        <animate
+          attributeName="baseFrequency"
+          values="0.0015;0.0021;0.0015"
+          dur="80s"
+          repeatCount="indefinite"/>
+      </feTurbulence>
 
       <feMerge result="finalIsland">
-        <feMergeNode in="o1"/><feMergeNode in="o3"/><feMergeNode in="o1"/><feMergeNode in="o3"/>
+        <feMergeNode in="o1"/>
+        <feMergeNode in="o3"/>
+        <feMergeNode in="o1"/>
+        <feMergeNode in="o3"/>
       </feMerge>
+
       <feGaussianBlur in="finalIsland" stdDeviation="5" result="noiseo"/>
 
-      <feTurbulence type="fractalNoise" baseFrequency="0.0016" numOctaves="8" seed="4" result="o2"/>
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.0016"
+        numOctaves="8"
+        seed="4"
+        result="o2">
+
+        <animate
+          attributeName="baseFrequency"
+          values="0.0012;0.0020;0.0012"
+          dur="75s"
+          repeatCount="indefinite"/>
+      </feTurbulence>
+
       <feMerge result="noiseo">
-        <feMergeNode in="o2"/><feMergeNode in="o4"/><feMergeNode in="noiseo"/>
+        <feMergeNode in="o2"/>
+        <feMergeNode in="o4"/>
+        <feMergeNode in="noiseo"/>
       </feMerge>
+
       <feGaussianBlur in="noiseo" stdDeviation="5" result="noiseo"/>
 
       <feMerge result="noiseo">
-        <feMergeNode in="o2"/><feMergeNode in="o2"/><feMergeNode in="noiseo"/>
+        <feMergeNode in="o2"/>
+        <feMergeNode in="o2"/>
+        <feMergeNode in="noiseo"/>
       </feMerge>
+
       <feGaussianBlur in="noiseo" stdDeviation="5" result="noiseo"/>
 
-      <feDiffuseLighting in="noiseo" surfaceScale="12" diffuseConstant="1" lighting-color="#d1bf96" result="lit">
+      <feDiffuseLighting
+        in="noiseo"
+        surfaceScale="12"
+        diffuseConstant="1"
+        lighting-color="#d1bf96"
+        result="lit">
+
         <feDistantLight azimuth="-90" elevation="0"/>
+
       </feDiffuseLighting>
 
-      <feBlend in="lit" in2="SourceGraphic" mode="normal"/>
+      <feBlend
+        in="lit"
+        in2="SourceGraphic"
+        mode="normal"/>
+
     </filter>
+
   </svg>
 
-  <!-- Instagram's embed script. Load it once, at the end of the page. The explicit https:
-       matters: Instagram's own snippet starts with //, which fails if you open the file from your computer. -->
-  <script async src="https://www.instagram.com/embed.js"></script>
-
 </body>
-</html>
+</html
