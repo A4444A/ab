@@ -90,22 +90,22 @@ body {
 .layer-a {
   z-index: -2;
   animation:
-    driftA 60s ease-in-out infinite alternate,
-    morphOut 15s ease-in-out infinite alternate;
+    driftA 40s ease-in-out infinite alternate,
+    morphOut 5s ease-in-out infinite alternate;
 }
 
 .layer-c {
   z-index: -2;
   animation:
-    driftA 60s ease-in-out infinite alternate,
-    morphIn 15s ease-in-out infinite alternate;
+    driftA 40s ease-in-out infinite alternate,
+    morphIn 5s ease-in-out infinite alternate;
 }
 
 .layer-b {
   z-index: -1;
   animation:
-    driftB 90s ease-in-out infinite alternate,
-    breathe 30s ease-in-out infinite alternate;
+    driftB 60s ease-in-out infinite alternate,
+    breathe 20s ease-in-out infinite alternate;
 }
 
 .island,
