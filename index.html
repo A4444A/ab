@@ -10,9 +10,19 @@
 </head>
 
 <body>
-	
+
+  <!-- Each wrapper (.layer) is the part that moves. Each inner element
+       carries the SVG filter and never changes, so the browser can
+       render the texture once and then just slide the finished result. -->
   <div class="layer layer-a" aria-hidden="true">
     <div class="island"></div>
+  </div>
+
+  <!-- Second version of the near layer with slightly different noise.
+       It crossfades with .layer-a to bring back the "wriggle".
+       Delete this block (and the #octave1b filter) to turn the effect off. -->
+  <div class="layer layer-c" aria-hidden="true">
+    <div class="islandc"></div>
   </div>
 
   <div class="layer layer-b" aria-hidden="true">
@@ -53,6 +63,7 @@
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
 
+    <!-- Near layer. Static (no <animate>), fewer octaves, no duplicate merge nodes. -->
     <filter id="octave1" x="0" y="0" width="100%" height="100%">
 
       <feTurbulence
@@ -109,6 +120,67 @@
 
     </filter>
 
+    <!-- Near layer, second state. Identical to #octave1 except o3 and o2 sit at
+         opposite ends of the ranges your old <animate> elements swept through
+         (o3: 0.009 -> 0.011, o2: 0.0096 -> 0.008). -->
+    <filter id="octave1b" x="0" y="0" width="100%" height="100%">
+
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.007"
+        numOctaves="5"
+        seed="6"
+        result="o1"/>
+
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.011"
+        numOctaves="4"
+        seed="4"
+        result="o3"/>
+
+      <feMerge result="merge1">
+        <feMergeNode in="o1"/>
+        <feMergeNode in="o3"/>
+      </feMerge>
+
+      <feGaussianBlur in="merge1" stdDeviation="5" result="blur1"/>
+
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.008"
+        numOctaves="4"
+        seed="7"
+        result="o2"/>
+
+      <feMerge result="merge2">
+        <feMergeNode in="o2"/>
+        <feMergeNode in="blur1"/>
+      </feMerge>
+
+      <feGaussianBlur in="merge2" stdDeviation="5" result="blur2"/>
+
+      <feMerge result="merge3">
+        <feMergeNode in="o2"/>
+        <feMergeNode in="blur2"/>
+      </feMerge>
+
+      <feGaussianBlur in="merge3" stdDeviation="5" result="blur3"/>
+
+      <feDiffuseLighting
+        in="blur3"
+        surfaceScale="16"
+        diffuseConstant="4"
+        lighting-color="#d7bb98">
+
+        <feDistantLight azimuth="90" elevation="0"/>
+
+      </feDiffuseLighting>
+
+    </filter>
+
+    <!-- Far layer. Same treatment. The old o4 (0.0018, seed 4) was nearly
+         identical to o2 (0.0016, seed 4), so it is removed. -->
     <filter id="octave2" x="0" y="0" width="100%" height="100%">
 
       <feTurbulence
