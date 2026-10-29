@@ -61,15 +61,6 @@ body {
   pointer-events: auto;
 }
 
-/* ---------- Background ----------
-   .layer  = the moving wrapper (only transform/opacity are animated).
-   .island / .islandt = the filtered element. It never changes, so the
-   texture is rendered once and then moved around as a finished image.
-
-   The layer is 10% larger than the screen so drifting never exposes an edge.
-   lvh (large viewport height) is used so the layer does NOT resize when a
-   phone's address bar shows or hides, which would force a re-render of the
-   texture. The plain vh lines are fallbacks for older browsers. */
 
 .layer {
   position: fixed;
@@ -85,14 +76,14 @@ body {
 
 .layer-a {
   z-index: -2;
-  animation: driftA 90s ease-in-out infinite alternate;
+  animation: driftA 55s ease-in-out infinite alternate;
 }
 
 .layer-b {
   z-index: -1;
   animation:
-    driftB 130s ease-in-out infinite alternate,
-    breathe 45s ease-in-out infinite alternate;
+    driftB 90s ease-in-out infinite alternate,
+    breathe 29s ease-in-out infinite alternate;
 }
 
 .island,
