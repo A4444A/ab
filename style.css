@@ -24,48 +24,20 @@ body {
   overflow-x: hidden;
   background: transparent;
 }
-#intro-container {
-  position: fixed;
-  inset: 0;
 
-  z-index: 2;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  pointer-events: none;
-}
-
-#intro-gif {
-  width: min(calc(100% - 24px), 900px);
-
-  border-radius: 12px;
-
-  box-shadow:
-    0 10px 28px rgba(0,0,0,0.4);
-}
+/* ---------- Intro text ---------- */
 
 #begin-transmission {
   position: fixed;
-
   top: 50%;
   left: 50%;
-
   transform: translate(-50%, -50%);
-
   z-index: 10;
-
   display: none;
-
   color: rgba(255,255,255,0.9);
-
   letter-spacing: 0.12em;
-
   cursor: pointer;
-
   user-select: none;
-
   transition:
     color 0.3s ease,
     text-shadow 0.3s ease;
@@ -73,73 +45,97 @@ body {
 
 #begin-transmission:hover {
   color: #ffffff;
-
-  text-shadow:
-    0 0 8px rgba(255,255,255,0.5);
+  text-shadow: 0 0 8px rgba(255,255,255,0.5);
 }
 
-#begin-transmission.visible {
-  color: rgba(255,255,255,0.9);
-}
-#begin-transmission:hover {
-  color: #ffffff;
-
-  text-shadow:
-    0 0 8px rgba(255,255,255,0.5);
-}
+/* ---------- Music content reveal (opacity only, no blur) ---------- */
 
 #music-content {
   opacity: 0;
-  filter: blur(10px);
-
   pointer-events: none;
-
-  transition:
-    opacity 5s ease,
-    filter 5s ease;
+  transition: opacity 5s ease;
 }
 
 #music-content.visible {
   opacity: 1;
-  filter: blur(0);
-
   pointer-events: auto;
 }
 
-#intro-container.fade-out {
-  opacity: 0;
+/* ---------- Background ----------
+   .layer  = the moving wrapper (only transform/opacity are animated).
+   .island / .islandt = the filtered element. It never changes, so the
+   texture is rendered once and then moved around as a finished image.
 
-  filter: blur(20px);
+   The layer is 10% larger than the screen so drifting never exposes an edge.
+   lvh (large viewport height) is used so the layer does NOT resize when a
+   phone's address bar shows or hides, which would force a re-render of the
+   texture. The plain vh lines are fallbacks for older browsers. */
 
-  transition:
-    opacity 5s ease,
-    filter 5s ease;
+.layer {
+  position: fixed;
+  left: -5vw;
+  top: -5vh;
+  top: -5lvh;
+  width: 110vw;
+  height: 110vh;
+  height: 110lvh;
+  pointer-events: none;
+  will-change: transform;
 }
 
-[hidden] {
-  display: none !important;
+.layer-a {
+  z-index: -2;
+  animation: driftA 90s ease-in-out infinite alternate;
+}
+
+.layer-b {
+  z-index: -1;
+  animation:
+    driftB 130s ease-in-out infinite alternate,
+    breathe 45s ease-in-out infinite alternate;
 }
 
 .island,
 .islandt {
-  position: fixed;
+  position: absolute;
   inset: 0;
   pointer-events: none;
   background: rgb(52, 65, 73);
-  transform: scale(1);
 }
 
 .island {
-  z-index: -2;
   opacity: 0.65;
-  filter: url(#octave1) brightness(20) contrast(1);
+  filter: url(#octave1) brightness(20);
 }
 
 .islandt {
-  z-index: -1;
   opacity: 0.5;
-  filter: url(#octave2) brightness(20) contrast(1);
+  filter: url(#octave2) brightness(20);
 }
+
+@keyframes driftA {
+  from { transform: translate3d(-2.5%, -1.5%, 0); }
+  to   { transform: translate3d(2.5%, 1.5%, 0); }
+}
+
+@keyframes driftB {
+  from { transform: translate3d(2%, -2%, 0); }
+  to   { transform: translate3d(-2%, 2%, 0); }
+}
+
+@keyframes breathe {
+  from { opacity: 1; }
+  to   { opacity: 0.75; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer-a,
+  .layer-b {
+    animation: none;
+  }
+}
+
+/* ---------- Layout ---------- */
 
 main {
   position: relative;
@@ -157,84 +153,14 @@ main {
 .frame {
   border-radius: 12px;
   overflow: hidden;
-
   background: #181818;
-
-  box-shadow:
-    0 10px 28px rgba(0,0,0,0.4);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.4);
 }
-
-@keyframes materialize {
-  from {
-    opacity: 0;
-    filter: blur(10px);
-  }
-
-  to {
-    opacity: 1;
-    filter: blur(0px);
-  }
-}
-
 
 .frame iframe {
   display: block;
   border: 0;
   width: 100%;
-}
-
-.events {
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(0,0,0,0.6);
-  padding: 4px 18px;
-}
-
-.events ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.event {
-  display: grid;
-  grid-template-columns: 5.5rem 1fr;
-  column-gap: 14px;
-  row-gap: 2px;
-  align-items: baseline;
-  padding: 15px 0;
-  color: inherit;
-  text-decoration: none;
-  line-height: 1.35;
-}
-
-.events li + li .event {
-  border-top: 1px solid rgba(255,255,255,0.12);
-}
-
-.event-date {
-  color: #d7bb98;
-  font-variant-numeric: tabular-nums;
-}
-
-.event-title {
-  font-size: 1.05rem;
-}
-
-.event-place {
-  grid-column: 2;
-  color: rgba(242,239,233,0.7);
-  font-size: 0.92rem;
-}
-
-a.event:hover .event-title {
-  text-decoration: underline;
-}
-
-a.event:focus-visible {
-  outline: 2px solid #d7bb98;
-  outline-offset: 2px;
-  border-radius: 6px;
 }
 
 @media (max-width: 600px) {
@@ -248,16 +174,8 @@ a.event:focus-visible {
     border-radius: 10px;
   }
 
-.apple-frame iframe {
+  .apple-frame iframe {
     height: 380px;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
   }
 
-  to {
-    opacity: 1;
-  }
-}
 }
