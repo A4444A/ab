@@ -61,6 +61,15 @@ body {
   pointer-events: auto;
 }
 
+/* ---------- Background ----------
+   .layer  = the moving wrapper (only transform/opacity are animated).
+   .island / .islandt = the filtered element. It never changes, so the
+   texture is rendered once and then moved around as a finished image.
+
+   The layer is 10% larger than the screen so drifting never exposes an edge.
+   lvh (large viewport height) is used so the layer does NOT resize when a
+   phone's address bar shows or hides, which would force a re-render of the
+   texture. The plain vh lines are fallbacks for older browsers. */
 
 .layer {
   position: fixed;
@@ -74,16 +83,29 @@ body {
   will-change: transform;
 }
 
+/* Layers A and C are two versions of the same texture. They share the same
+   drift (same name, same duration) so they stay perfectly aligned, and
+   crossfade with each other. The crossfade is what creates the wriggle. */
+
 .layer-a {
   z-index: -2;
-  animation: driftA 55s ease-in-out infinite alternate;
+  animation:
+    driftA 60s ease-in-out infinite alternate,
+    morphOut 15s ease-in-out infinite alternate;
+}
+
+.layer-c {
+  z-index: -2;
+  animation:
+    driftA 60s ease-in-out infinite alternate,
+    morphIn 15s ease-in-out infinite alternate;
 }
 
 .layer-b {
   z-index: -1;
   animation:
     driftB 90s ease-in-out infinite alternate,
-    breathe 29s ease-in-out infinite alternate;
+    breathe 30s ease-in-out infinite alternate;
 }
 
 .island,
@@ -99,9 +121,28 @@ body {
   filter: url(#octave1) brightness(20);
 }
 
+.islandc {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgb(52, 65, 73);
+  opacity: 0.65;
+  filter: url(#octave1b) brightness(20);
+}
+
 .islandt {
   opacity: 0.5;
   filter: url(#octave2) brightness(20);
+}
+
+@keyframes morphOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes morphIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes driftA {
@@ -121,8 +162,13 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .layer-a,
-  .layer-b {
+  .layer-b,
+  .layer-c {
     animation: none;
+  }
+
+  .layer-c {
+    display: none;
   }
 }
 
