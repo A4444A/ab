@@ -10,26 +10,31 @@
 </head>
 
 <body>
+	
+  <div class="layer layer-a" aria-hidden="true">
+    <div class="island"></div>
+  </div>
 
-  <div class="island" aria-hidden="true"></div>
-  <div class="islandt" aria-hidden="true"></div>
+  <div class="layer layer-b" aria-hidden="true">
+    <div class="islandt"></div>
+  </div>
 
-<div id="begin-transmission">
-  [BEGIN TRANSMISSION]
-</div>
+  <div id="begin-transmission">
+    [BEGIN TRANSMISSION]
+  </div>
 
   <main id="music-content">
 
     <div class="frame spotify-frame">
-	<iframe
-   	 title="Collection of Soundwaves on Spotify"
-   	 src="https://open.spotify.com/embed/album/3HBJVXJK4a3cbYkRq32iym?utm_source=generator&theme=0"
-   	 width="100%"
-    	height="500"
-   	 frameborder="0"
-  	  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
- 	   loading="lazy">
-	</iframe>
+      <iframe
+        title="Collection of Soundwaves on Spotify"
+        src="https://open.spotify.com/embed/album/3HBJVXJK4a3cbYkRq32iym?utm_source=generator&theme=0"
+        width="100%"
+        height="500"
+        frameborder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy">
+      </iframe>
     </div>
 
     <div class="frame apple-frame">
@@ -44,207 +49,123 @@
       </iframe>
     </div>
 
-    <section id="events" class="events" aria-label="Upcoming events" hidden>
-      <ul id="event-list"></ul>
-    </section>
-
   </main>
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
 
-    <filter id="octave1" x="-3%" y="-3%" width="115%" height="110%">
+    <filter id="octave1" x="0" y="0" width="100%" height="100%">
 
       <feTurbulence
         type="fractalNoise"
         baseFrequency="0.007"
-        numOctaves="12"
+        numOctaves="5"
         seed="6"
-        result="o1">
-
-      </feTurbulence>
+        result="o1"/>
 
       <feTurbulence
         type="fractalNoise"
         baseFrequency="0.009"
-        numOctaves="5"
+        numOctaves="4"
         seed="4"
-        result="o3">
+        result="o3"/>
 
-        <animate
-          attributeName="baseFrequency"
-          values="0.008;0.011;0.008"
-          dur="115s"
-          repeatCount="indefinite"/>
-      </feTurbulence>
-
-      <feTurbulence
-        type="fractalNoise"
-        baseFrequency="0.006"
-        numOctaves="6"
-        seed="7"
-        result="o4">
-
-        <animate
-          attributeName="baseFrequency"
-          values="0.005;0.007;0.005"
-          dur="95s"
-          repeatCount="indefinite"/>
-      </feTurbulence>
-
-      <feMerge result="finalIsland">
-        <feMergeNode in="o1"/>
-        <feMergeNode in="o3"/>
+      <feMerge result="merge1">
         <feMergeNode in="o1"/>
         <feMergeNode in="o3"/>
       </feMerge>
 
-      <feGaussianBlur in="finalIsland" stdDeviation="5" result="noiseo"/>
+      <feGaussianBlur in="merge1" stdDeviation="5" result="blur1"/>
 
       <feTurbulence
         type="fractalNoise"
         baseFrequency="0.0096"
-        numOctaves="5"
+        numOctaves="4"
         seed="7"
-        result="o2">
+        result="o2"/>
 
-        <animate
-          attributeName="baseFrequency"
-          values="0.008;0.011;0.008"
-          dur="45s"
-          repeatCount="indefinite"/>
-      </feTurbulence>
-
-      <feMerge result="noiseo">
+      <feMerge result="merge2">
         <feMergeNode in="o2"/>
-        <feMergeNode in="o4"/>
-        <feMergeNode in="noiseo"/>
+        <feMergeNode in="blur1"/>
       </feMerge>
 
-      <feGaussianBlur in="noiseo" stdDeviation="5" result="noiseo"/>
+      <feGaussianBlur in="merge2" stdDeviation="5" result="blur2"/>
 
-      <feMerge result="noiseo">
+      <feMerge result="merge3">
         <feMergeNode in="o2"/>
-        <feMergeNode in="o2"/>
-        <feMergeNode in="noiseo"/>
+        <feMergeNode in="blur2"/>
       </feMerge>
 
-      <feGaussianBlur in="noiseo" stdDeviation="5" result="noiseo"/>
+      <feGaussianBlur in="merge3" stdDeviation="5" result="blur3"/>
 
       <feDiffuseLighting
-        in="noiseo"
+        in="blur3"
         surfaceScale="16"
         diffuseConstant="4"
-        lighting-color="#d7bb98"
-        result="lit">
+        lighting-color="#d7bb98">
 
         <feDistantLight azimuth="90" elevation="0"/>
 
       </feDiffuseLighting>
 
-      <feBlend
-        in="lit"
-        in2="SourceGraphic"
-        mode="normal"/>
-
     </filter>
 
-    <filter id="octave2" x="-5%" y="-5%" width="110%" height="110%">
+    <filter id="octave2" x="0" y="0" width="100%" height="100%">
 
       <feTurbulence
         type="fractalNoise"
         baseFrequency="0.0005"
-        numOctaves="11"
+        numOctaves="5"
         seed="6"
-        result="o1">
-
-        <animate
-          attributeName="baseFrequency"
-          values="0.0004;0.0007;0.0004"
-          dur="70s"
-          repeatCount="indefinite"/>
-      </feTurbulence>
+        result="o1"/>
 
       <feTurbulence
         type="fractalNoise"
         baseFrequency="0.0001"
-        numOctaves="8"
+        numOctaves="4"
         seed="4"
-        result="o3">
+        result="o3"/>
 
-        <animate
-          attributeName="baseFrequency"
-          values="0.00008;0.00014;0.00008"
-          dur="65s"
-          repeatCount="indefinite"/>
-      </feTurbulence>
-
-      <feTurbulence
-        type="fractalNoise"
-        baseFrequency="0.0018"
-        numOctaves="8"
-        seed="4"
-        result="o4">
-
-        <animate
-          attributeName="baseFrequency"
-          values="0.0015;0.0021;0.0015"
-          dur="80s"
-          repeatCount="indefinite"/>
-      </feTurbulence>
-
-      <feMerge result="finalIsland">
-        <feMergeNode in="o1"/>
-        <feMergeNode in="o3"/>
+      <feMerge result="merge1">
         <feMergeNode in="o1"/>
         <feMergeNode in="o3"/>
       </feMerge>
 
-      <feGaussianBlur in="finalIsland" stdDeviation="5" result="noiseo"/>
+      <feGaussianBlur in="merge1" stdDeviation="5" result="blur1"/>
 
       <feTurbulence
         type="fractalNoise"
         baseFrequency="0.0016"
-        numOctaves="8"
+        numOctaves="5"
         seed="4"
-        result="o2">
+        result="o2"/>
 
-      </feTurbulence>
-
-      <feMerge result="noiseo">
+      <feMerge result="merge2">
         <feMergeNode in="o2"/>
-        <feMergeNode in="o4"/>
-        <feMergeNode in="noiseo"/>
+        <feMergeNode in="blur1"/>
       </feMerge>
 
-      <feGaussianBlur in="noiseo" stdDeviation="5" result="noiseo"/>
+      <feGaussianBlur in="merge2" stdDeviation="5" result="blur2"/>
 
-      <feMerge result="noiseo">
+      <feMerge result="merge3">
         <feMergeNode in="o2"/>
-        <feMergeNode in="o2"/>
-        <feMergeNode in="noiseo"/>
+        <feMergeNode in="blur2"/>
       </feMerge>
 
-      <feGaussianBlur in="noiseo" stdDeviation="5" result="noiseo"/>
+      <feGaussianBlur in="merge3" stdDeviation="5" result="blur3"/>
 
       <feDiffuseLighting
-        in="noiseo"
+        in="blur3"
         surfaceScale="12"
         diffuseConstant="1"
-        lighting-color="#d1bf96"
-        result="lit">
+        lighting-color="#d1bf96">
 
         <feDistantLight azimuth="-90" elevation="0"/>
 
       </feDiffuseLighting>
-
-      <feBlend
-        in="lit"
-        in2="SourceGraphic"
-        mode="normal"/>
 
     </filter>
 
   </svg>
 
 </body>
-</html
+</html>
